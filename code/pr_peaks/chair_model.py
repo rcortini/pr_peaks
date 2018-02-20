@@ -84,3 +84,16 @@ def init_omega_t(N,n,mu,sigma=None,seed=None) :
     for i in xrange(N) :
         omega_t[i,np.random.choice(n,m[i],replace=False)] = True
     return omega_t
+
+class JumpingModel :
+    def __init__ (self,T,site_taus) :
+        self.T = T
+        self.site_taus = site_taus
+        self.omega_t = {}
+        self.occupancy = {}
+    def run(self,nsteps,mu,sigma,omega_t_initial) :
+        self.omega_t[mu] = pr_peaks.run_chair_simulation(nsteps,
+                                                         omega_t_initial,
+                                                         self.T,
+                                                         self.site_taus)
+        self.occupancy[mu] = self.omega_t[mu].sum(axis=0)
