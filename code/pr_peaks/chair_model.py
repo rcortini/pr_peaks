@@ -65,16 +65,19 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
                     searcher.td = step + np.random.exponential(scale=site_taus[searcher.site])
     return omega_t
 
-def init_omega_t(N,n,mu,sigma,seed=None) :
+def init_omega_t(N,n,mu,sigma=None,seed=None) :
     # init the random number generator if it was passed
     if seed is not None :
         np.random.seed(init_seed)
     # init searcher numbers
-    m = np.random.normal(loc=mu,scale=sigma,size=N).astype(np.int32)
-    # ensures that no system has more searchers than available sites and that
-    # every system has at least one searcher
-    m[m>n] = n
-    m[m<=1] = 1
+    if sigma is not None :
+        m = np.random.normal(loc=mu,scale=sigma,size=N).astype(np.int32)
+        # ensures that no system has more searchers than available sites and that
+        # every system has at least one searcher
+        m[m>n] = n
+        m[m<=1] = 1
+    else :
+        m = mu * np.ones(N).astype(np.int32)
     # init omega matrix
     omega_t = np.zeros((N,n),dtype=bool)
     # fill with initial occupancy
