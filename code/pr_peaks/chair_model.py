@@ -52,11 +52,10 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
                 # if the searcher has to stay longer on the site, skip it
                 if step>searcher.td :
                     # if not, get the elements corresponding to the transition matrix
-                    free_sites = np.where(~omega_t[i,:])[0]
-                    Tstar = T[searcher.site,free_sites]
+                    Tstar = T[searcher.site,:] * (~omega_t[i,:])
                     Tstar /= Tstar.sum()
                     # now get the next site
-                    next_site = np.random.choice(free_sites,p=Tstar)
+                    next_site = np.random.choice(n,p=Tstar)
                     # update omega matrix
                     omega_t[i,searcher.site] = False
                     omega_t[i,next_site] = True
@@ -92,8 +91,8 @@ class JumpingModel :
         self.omega_t = {}
         self.occupancy = {}
     def run(self,nsteps,mu,sigma,omega_t_initial) :
-        self.omega_t[mu] = pr_peaks.run_chair_simulation(nsteps,
-                                                         omega_t_initial,
-                                                         self.T,
-                                                         self.site_taus)
+        self.omega_t[mu] = run_chair_simulation(nsteps,
+                                                omega_t_initial,
+                                                self.T,
+                                                self.site_taus)
         self.occupancy[mu] = self.omega_t[mu].sum(axis=0)
