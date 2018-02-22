@@ -40,6 +40,8 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
     # no need to pass N,n,m through the arguments of the function
     N,n = omega_t.shape
     m = omega_t.sum(axis=1)
+    # init jumping matrix
+    J = np.zeros((n,n)).astype(np.int32)
     # init searchers
     searchers = init_searchers(omega_t,site_taus)
     # cycle on time
@@ -59,10 +61,12 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
                     # update omega matrix
                     omega_t[i,searcher.site] = False
                     omega_t[i,next_site] = True
+                    # update jumping matrix
+                    J[searcher.site,next_site] += 1
                     # update searcher
                     searcher.site = next_site
                     searcher.td = step + np.random.exponential(scale=site_taus[searcher.site])
-    return omega_t
+    return omega_t, J
 
 def init_omega_t(N,n,mu,sigma=None,seed=None) :
     # init the random number generator if it was passed
@@ -89,16 +93,18 @@ class JumpingModel :
         self.T = T
         self.site_taus = site_taus
         self.omega_t = {}
+        self.J = {}
         self.occupancy = {}
     def run(self,nsteps,mu,sigma,omega_t_initial) :
-        self.omega_t[mu] = run_chair_simulation(nsteps,
+        self.omega_t[mu],self.J[mu] = run_chair_simulation(nsteps,
                                                 omega_t_initial,
                                                 self.T,
                                                 self.site_taus)
         self.occupancy[mu] = self.omega_t[mu].sum(axis=0)
 
 def H_to_L(model,Hsites,Lsites) :
-    mus = model.occupancy.keys().sort()
+    mus = model.occupancy.keys()
+    mus.sort()
     nmus = len(mus)
     model.avH = {}
     model.avL = {}
