@@ -96,3 +96,14 @@ class JumpingModel :
                                                 self.T,
                                                 self.site_taus)
         self.occupancy[mu] = self.omega_t[mu].sum(axis=0)
+
+def H_to_L(model,Hsites,Lsites) :
+    mus = model.occupancy.keys().sort()
+    nmus = len(mus)
+    model.avH = {}
+    model.avL = {}
+    model.H_to_L = np.zeros(nmus)
+    for i,mu in enumerate(mus) :
+        model.avH[mu] = model.occupancy[mu][Hsites].mean()
+        model.avL[mu] = model.occupancy[mu][Lsites].mean()
+        model.H_to_L[i] = model.avH[mu]/model.avL[mu]
