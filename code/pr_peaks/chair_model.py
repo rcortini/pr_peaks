@@ -95,7 +95,6 @@ class JumpingModel :
                                                 omega_t_initial,
                                                 self.T,
                                                 self.site_taus)
-        self.occupancy[mu] = self.omega_t[mu].sum(axis=0)
 
 def H_to_L(model,Hsites,Lsites) :
     mus = model.occupancy.keys()
