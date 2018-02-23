@@ -6,7 +6,7 @@ class Searcher :
         self.site = site
         self.td = td
 
-def init_searchers(omega_t,site_taus) :
+def init_searchers(omega_t,site_taus,deterministic=False) :
     """
     Initializes the searchers in the system. Note that this function will only
     be invoked from within the main simulation loop, so the "searchers" list that
@@ -23,13 +23,16 @@ def init_searchers(omega_t,site_taus) :
     searcher_sites = np.where(omega_t)[0]
     for s in xrange(m) :
         site = searcher_sites[s]
-        td = np.random.exponential(scale=site_taus[site])
+        if deterministic :
+            td = site_taus[site]
+        else :
+            td = np.random.exponential(scale=site_taus[site])
         searcher = Searcher(s,site,td)
         searchers.append(searcher)
     return searchers
 
 def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,
-                         teq=0,tsample=1,seed=None) :
+                         seed=None,teq=0,tsample=1,deterministic=False) :
     # init the random number generator if it was passed
     if seed is not None :
         np.random.seed(seed)
@@ -41,7 +44,7 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,
     # init jumping matrix
     J = np.zeros((n,n)).astype(np.int32)
     # init searchers
-    searchers = init_searchers(omega_t,site_taus)
+    searchers = init_searchers(omega_t,site_taus,deterministic=deterministic)
     # init sampling matrix
     nsamples = (nsteps-teq)/tsample
     samples = np.zeros((nsamples,n),dtype=bool)
@@ -65,7 +68,11 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,
                 J[searcher.site,next_site] += 1
                 # update searcher
                 searcher.site = next_site
-                searcher.td = step + np.random.exponential(scale=site_taus[searcher.site])
+                if deterministic :
+                    next_td = site_taus[searcher.site]
+                else :
+                    next_td = np.random.exponential(scale=site_taus[searcher.site])
+                searcher.td = step + next_td
         # update samples
         if step>teq and (step-teq)%tsample==0 :
             samples[i_sample,:] = omega_t
@@ -99,19 +106,22 @@ class JumpingModel :
         self.J = {}
         self.samples = {}
         self.theta = {}
-    def run(self,nsteps,mu,sigma,omega_t_initial) :
+    def run(self,nsteps,mu,sigma,omega_t_initial,
+           seed=None,teq=0,tsample=1,deterministic=False) :
         self.omega_t[mu],self.J[mu],self.samples[mu] = \
-                run_chair_simulation(nsteps,omega_t_initial,self.T,self.site_taus)
+                run_chair_simulation(nsteps,omega_t_initial,self.T,self.site_taus,
+                                    seed=seed,teq=teq,tsample=tsample,deterministic=deterministic)
         self.theta[mu] = self.samples[mu].sum(axis=0)/float(self.samples[mu].sum())
 
 def H_to_L(model,Hsites,Lsites) :
-    mus = model.occupancy.keys()
+    mus = model.samples.keys()
     mus.sort()
     nmus = len(mus)
     model.avH = {}
     model.avL = {}
     model.H_to_L = np.zeros(nmus)
     for i,mu in enumerate(mus) :
-        model.avH[mu] = model.occupancy[mu][Hsites].mean()
-        model.avL[mu] = model.occupancy[mu][Lsites].mean()
+        occupancy = model.samples[mu].sum(axis=0)
+        model.avH[mu] = occupancy[Hsites].mean()
+        model.avL[mu] = occupancy[Lsites].mean()
         model.H_to_L[i] = model.avH[mu]/model.avL[mu]
