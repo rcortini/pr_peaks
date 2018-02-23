@@ -28,7 +28,8 @@ def init_searchers(omega_t,site_taus) :
         searchers.append(searcher)
     return searchers
 
-def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
+def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,
+                         teq=0,tsample=1,seed=None) :
     # init the random number generator if it was passed
     if seed is not None :
         np.random.seed(seed)
@@ -41,6 +42,10 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
     J = np.zeros((n,n)).astype(np.int32)
     # init searchers
     searchers = init_searchers(omega_t,site_taus)
+    # init sampling matrix
+    nsamples = (nsteps-teq)/tsample
+    samples = np.zeros((nsamples,n),dtype=bool)
+    i_sample = 0
     # cycle on time
     for step in xrange(1,nsteps+1) :
         # cycle on the searchers
@@ -62,7 +67,10 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,seed=None) :
                 searcher.site = next_site
                 searcher.td = step + np.random.exponential(scale=site_taus[searcher.site])
         # update samples
-    return omega_t, J
+        if step>teq and (step-teq)%tsample==0 :
+            samples[i_sample,:] = omega_t
+            i_sample += 1
+    return omega_t, J, samples
 
 def init_omega_t(n,mu,sigma=None,seed=None) :
     # init the random number generator if it was passed
@@ -89,12 +97,12 @@ class JumpingModel :
         self.site_taus = site_taus
         self.omega_t = {}
         self.J = {}
-        self.occupancy = {}
+        self.samples = {}
+        self.theta = {}
     def run(self,nsteps,mu,sigma,omega_t_initial) :
-        self.omega_t[mu],self.J[mu] = run_chair_simulation(nsteps,
-                                                omega_t_initial,
-                                                self.T,
-                                                self.site_taus)
+        self.omega_t[mu],self.J[mu],self.samples[mu] = \
+                run_chair_simulation(nsteps,omega_t_initial,self.T,self.site_taus)
+        self.theta[mu] = self.samples[mu].sum(axis=0)/float(self.samples[mu].sum())
 
 def H_to_L(model,Hsites,Lsites) :
     mus = model.occupancy.keys()
