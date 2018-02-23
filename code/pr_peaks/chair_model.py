@@ -55,7 +55,7 @@ def run_chair_simulation(nsteps,omega_t_initial,T,site_taus,
         for s in xrange(m) :
             searcher = searchers[s]
             # if the searcher has to stay longer on the site, skip it
-            if step>searcher.td :
+            if step>=searcher.td :
                 # if not, get the elements corresponding to the transition matrix
                 Tstar = T[searcher.site,:] * (~omega_t)
                 Tstar /= Tstar.sum()
