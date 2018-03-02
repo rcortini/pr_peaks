@@ -77,6 +77,7 @@ class JumpingModel :
         self.samples = {}
         self.theta = {}
     def run(self,nsteps,omega_t_initial,seed=None,teq=0,tsample=1) :
+        mu = omega_t_initial.sum()
         omega_t,self.J[mu],self.samples[mu] = \
             run_chair_simulation(nsteps,
                                  omega_t_initial,
