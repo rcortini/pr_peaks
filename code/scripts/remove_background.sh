@@ -8,7 +8,7 @@ function chipseq_bam_location {
   sample_id=$1
   xavi_datadir='/mnt/xavi/data'
   d="$xavi_datadir/chipseq/samples/$sample_id/alignments"
-  find $d -name "*.bam"
+  find $d -name "*.bam" | head -n 1
 }
 
 # location of Zerone
