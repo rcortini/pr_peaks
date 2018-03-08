@@ -11,11 +11,30 @@ function chipseq_bam_location {
   find $d -name "*.bam" | head -n 1
 }
 
+# check for proper invocation
+if [ $# -lt 1 ]; then
+  echo "remove_background.sh <input>" 1>&2
+  exit 1
+fi
+input=$1
+
+# build the file name for the input to use
+if [ "$input" == "T0_roberto_input" ]; then
+  input_bam=$(chipseq_bam_location $input)
+else
+  input_bam="/mnt/mbeato/rferrari/hg38/hg38_MMTV/comb_inputs/$input.bam"
+fi
+
+# check that the input file exists
+if ! test -e $input_bam; then
+  echo "Input file does not exist!" 1>&2
+  exit 1
+fi
+
 # location of Zerone
 zerone=$HOME/soft/zerone/zerone
 
 # input file names
-input_bam=$(chipseq_bam_location "T0_roberto_input")
 high_bam=$(chipseq_bam_location "gv_107_01_01_chipseq")
 medium1_bam=$(chipseq_bam_location "gv_108_01_01_chipseq")
 medium2_bam=$(chipseq_bam_location "gv_109_01_01_chipseq")
@@ -24,11 +43,13 @@ low_bam=$(chipseq_bam_location "gv_111_01_01_chipseq")
 
 # output file names
 data_dir=$HOME/work/CRG/projects/pr_peaks/data
-high_out=$data_dir/high-zerone.out
-medium1_out=$data_dir/medium1-zerone.out
-medium2_out=$data_dir/medium2-zerone.out
-medium3_out=$data_dir/medium3-zerone.out
-low_out=$data_dir/low-zerone.out
+output_dir=$data_dir/$input
+mkdir -p $output_dir
+high_out=$output_dir/high-zerone.out
+medium1_out=$output_dir/medium1-zerone.out
+medium2_out=$output_dir/medium2-zerone.out
+medium3_out=$output_dir/medium3-zerone.out
+low_out=$output_dir/low-zerone.out
 
 # invoke Zerone
 log_message "Zeroning HIGH"
