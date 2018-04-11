@@ -9,4 +9,4 @@
 #$ -P prj005866
 
 # run
-bash zeronize.sh @INPUT@ @SAMPLE_ID@
+bash ../../../zeronize.sh @INPUT@ @SAMPLE_ID@
