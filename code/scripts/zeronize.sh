@@ -6,7 +6,7 @@ source ~/work/tools/my_env.sh
 # to the "sample_id" that user passes through the only argument
 function chipseq_bam_location {
   sample_id=$1
-  if [[ `hostname` == *"ant-login"* ]]; then
+  if [[ `hostname` != "willow" ]]; then
     datadir='/users/mbeato/projects/data'
   else
     datadir='/mnt/mbeato/projects/data'
@@ -27,7 +27,7 @@ sample_id=$2
 if [ "$input" == "T0_roberto_input" ]; then
   input_bam=$(chipseq_bam_location $input)
 else
-  if [[ `hostname` == *"ant-login"* ]]; then
+  if [[ `hostname` != "willow" ]]; then
     input_bam="/mnt/mbeato/rferrari/hg38/hg38_MMTV/comb_inputs/$input.bam"
   else
     input_bam="/users/mbeato/rferrari/hg38/hg38_MMTV/comb_inputs/$input.bam"
@@ -47,7 +47,7 @@ zerone=$HOME/soft/zerone/zerone
 bam=$(chipseq_bam_location $sample_id)
 
 # output file names
-if [[ `hostname` == *"ant-login"* ]]; then
+if [[ `hostname` != "willow" ]]; then
   data_dir=/users/projects/prj005866_no_backup/pr_peaks/data
 else
   data_dir=$HOME/work/CRG/projects/pr_peaks/data
