@@ -1,0 +1,15 @@
+#!/bin/bash
+#$ -N @NAME@ 
+#$ -l virtual_free=2G,h_rt=00:30:00
+#$ -e @NAME@.err
+#$ -o @NAME@.out
+#$ -V
+#$ -q short-sl7
+#$ -cwd
+#$ -P prj005866
+
+# test
+echo $1
+
+# run
+# bash zeronize.sh @NAME@
