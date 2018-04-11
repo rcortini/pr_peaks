@@ -47,7 +47,11 @@ zerone=$HOME/soft/zerone/zerone
 bam=$(chipseq_bam_location $sample_id)
 
 # output file names
-data_dir=$HOME/work/CRG/projects/pr_peaks/data
+if [[ `hostname` == *"ant-login"* ]]; then
+  data_dir=/users/projects/prj005866_no_backup/pr_peaks/data
+else
+  data_dir=$HOME/work/CRG/projects/pr_peaks/data
+fi
 output_dir=$data_dir/$input
 if ! test -e $output_dir; then
   mkdir -p $output_dir
