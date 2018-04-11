@@ -1,15 +1,12 @@
 #!/bin/bash
-#$ -N @NAME@ 
+#$ -N @SAMPLE_ID@
 #$ -l virtual_free=2G,h_rt=00:30:00
-#$ -e @NAME@.err
-#$ -o @NAME@.out
+#$ -e @SAMPLE_ID@.err
+#$ -o @SAMPLE_ID@.out
 #$ -V
 #$ -q short-sl7
 #$ -cwd
 #$ -P prj005866
 
-# test
-echo $1
-
 # run
-# bash zeronize.sh @NAME@
+bash zeronize.sh @INPUT@ @SAMPLE_ID@
