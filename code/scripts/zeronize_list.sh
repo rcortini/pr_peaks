@@ -16,6 +16,6 @@ while read line; do
     sed -e s,@SAMPLE_ID@,$sample_id,g |
   tee > $pbs_out
   cd $dir
-    echo "qsub zeronize.pbs"
+    qsub zeronize.pbs
   cd $root_dir
 done < zerone_list.txt
