@@ -6,11 +6,15 @@ while read line; do
   input=$1
   sample_id=$2
   dir=cluster/$input/$sample_id
+  if ! test -e $dir; then
+    mkdir -p $dir
+  fi
   pbs_out=$dir/zeronize.pbs
   cat $pbs_out |\
     sed -e s,@INPUT@,$input,g |\
     sed -e s,@SAMPLE_ID@,$sample_id,g |\
-    cd $dir
-      echo "qsub $pbs_out"
-    cd $root_dir
+  tee > $pbs_out
+  cd $dir
+    echo "qsub $pbs_out"
+  cd $root_dir
 done < zerone_list.txt
