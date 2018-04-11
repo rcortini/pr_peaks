@@ -1,6 +1,7 @@
 #!/bin/bash
 
 root_dir=$(pwd)
+pbs_in="zeronize.pbs.in"
 while read line; do
   set -- $line
   input=$1
@@ -10,9 +11,9 @@ while read line; do
     mkdir -p $dir
   fi
   pbs_out=$dir/zeronize.pbs
-  cat $pbs_out |\
-    sed -e s,@INPUT@,$input,g |\
-    sed -e s,@SAMPLE_ID@,$sample_id,g |\
+  cat $pbs_in |
+    sed -e s,@INPUT@,$input,g |
+    sed -e s,@SAMPLE_ID@,$sample_id,g |
   tee > $pbs_out
   cd $dir
     echo "qsub $pbs_out"
