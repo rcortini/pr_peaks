@@ -27,7 +27,11 @@ sample_id=$2
 if [ "$input" == "T0_roberto_input" ]; then
   input_bam=$(chipseq_bam_location $input)
 else
-  input_bam="/mnt/mbeato/rferrari/hg38/hg38_MMTV/comb_inputs/$input.bam"
+  if [[ `hostname` == *"ant-login"* ]]; then
+    input_bam="/mnt/mbeato/rferrari/hg38/hg38_MMTV/comb_inputs/$input.bam"
+  else
+    input_bam="/users/mbeato/rferrari/hg38/hg38_MMTV/comb_inputs/$input.bam"
+  fi
 fi
 
 # check that the input file exists
