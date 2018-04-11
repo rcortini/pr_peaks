@@ -48,7 +48,7 @@ bam=$(chipseq_bam_location $sample_id)
 
 # output file names
 if [[ `hostname` != "willow" ]]; then
-  data_dir=/users/projects/prj005866_no_backup/pr_peaks/data
+  data_dir=/users/project/prj005866_no_backup/pr_peaks/data
 else
   data_dir=$HOME/work/CRG/projects/pr_peaks/data
 fi
