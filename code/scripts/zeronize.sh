@@ -6,8 +6,12 @@ source ~/work/tools/my_env.sh
 # to the "sample_id" that user passes through the only argument
 function chipseq_bam_location {
   sample_id=$1
-  xavi_datadir='/mnt/mbeato/projects/data'
-  d="$xavi_datadir/chipseq/samples/$sample_id/alignments"
+  if [[ `hostname` == *"ant-login"* ]]; then
+    datadir='/users/mbeato/projects/data'
+  else
+    datadir='/mnt/mbeato/projects/data'
+  fi
+  d="$datadir/chipseq/samples/$sample_id/alignments"
   find $d -name "*.bam" | head -n 1
 }
 
