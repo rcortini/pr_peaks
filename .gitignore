@@ -1,5 +1,5 @@
 notes/.ipynb_checkpoints
-data/
+data
 *.swp
 *.pyc
 code/scripts/cluster
