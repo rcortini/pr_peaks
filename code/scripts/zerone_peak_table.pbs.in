@@ -1,0 +1,27 @@
+#!/bin/bash
+#$ -N @SID@-@PID@
+#$ -l virtual_free=15G,h_rt=00:10:00
+#$ -e @SID@-@PID@.err
+#$ -o @SID@-@PID@.out
+#$ -V
+#$ -q short-sl7
+#$ -cwd
+#$ -P prj005866
+
+# change to analysis directory
+cd $HOME/work/CRG/projects/pr_peaks/code/scripts
+
+# source cluster environment
+source $HOME/.cluster_env
+
+# activate python virtual environment
+workon cpython2711
+
+# python environment
+export PYTHONPATH=$HOME/soft/python
+
+# run
+python zerone_peak_table.py @SID@ @PID@
+
+# deactivate python virtual environment
+deactivate
