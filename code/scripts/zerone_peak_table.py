@@ -33,13 +33,13 @@ experiment = zerone.ZeroneOutput(zerone_fname)
 peaks = load_hcp_peaks(peaks_id)
 
 # init table
-table = np.zeros(peaks.size,dtype=np.int32)
+table = np.zeros(peaks.size)
 
 # fill table
 log_message('zerone_peak_table','Filling peak table')
 for i,peak in enumerate(peaks) :
     peaks = experiment.find_peak(peak['chr'],peak['start'],peak['end'])
-    enrichment = peaks['enrichment'].sum()/peaks.size
+    enrichment = peaks['enrichment'].sum()/float(peaks.size)
     table[i] = enrichment
 
 # save output file
