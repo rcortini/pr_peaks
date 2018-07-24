@@ -2,13 +2,13 @@ from mybiotools import parse_simple_bed, chipseq_bam_location
 import pysam
 import numpy as np
 
-def load_hcp_peaks (peaks_id,xavi_datadir='/mnt/xavi') :
-    datadir = '%s/projects/gvicent/2017-01-23_characterisation_prbs_r5020_titration/tables'%(xavi_datadir)
+def load_hcp_peaks (peaks_id, pr_peaks_root='/home/rcortini/work/CRG/projects/pr_peaks') :
+    datadir = '%s/data/peak_analysis'%(pr_peaks_root)
     datafile = '%s/genomic_coordinates_by_peak_population_%s.bed'%(datadir,peaks_id)
     return parse_simple_bed(datafile)
 
 class Condition :
-    def __init__(self,name,peak_code,concentration,sample_id) :
+    def __init__(self, name, peak_code, concentration, sample_id) :
         self.name = name
         self.peak_code = peak_code
         self.concentration = concentration

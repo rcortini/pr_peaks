@@ -38,7 +38,7 @@ def run_chair_simulation(nsteps,omega_t_initial,H,site_taus,boost,
     # cycle on time
     for step in xrange(1,nsteps+1) :
         # cycle on the searchers
-        for s in xrange(n) :
+        for s in  np.random.choice(range(n), size=n, replace=False) :
             searcher_id = searcher_sites[s]
             if searcher_id != -1 :
                 # if the searcher has to stay longer on the site, skip it
