@@ -17,7 +17,7 @@ source ~/work/tools/my_env.sh
 
 # variables
 analysis=peak_analysis
-regions="1HCP 2HCP 3HCP 4HCP all_treated"
+regions="1HCP 2HCP 3HCP 4HCP 5HCP 6HCP 7HCP all_treated"
 process=genomic_coordinates_by_peak_population
 min_qval=10 	# expressed as -log10(x)
 peak_caller=macs2
@@ -30,7 +30,7 @@ min_enrichment=4
 
 # Paths
 PROJECT=$HOME/work/CRG/projects/pr_peaks
-DATA=$PROJECT/data
+DATA=$PROJECT/data/chipseq
 ANALYSIS=$DATA/$analysis
 mkdir -p $ANALYSIS
 
@@ -38,11 +38,19 @@ peaks_overlap=$ANALYSIS/overlap_peaks_minqval${min_qval}_minenrichment${min_enri
 
 # hash array relating a certain tag to the peaks category
 declare -A peaks_category_tag
-peaks_category_tag["all_treated"]="gv_107_01_01_chipseq|gv_108_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
-peaks_category_tag["4HCP"]="gv_108_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
-peaks_category_tag["3HCP"]="gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
-peaks_category_tag["2HCP"]="gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
 peaks_category_tag["1HCP"]="gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["2HCP"]="gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["3HCP"]="gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["4HCP"]="rz_013_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["5HCP"]="gv_108_01_01_chipseq|rz_013_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["6HCP"]="rz_012_01_01_chipseq|gv_108_01_01_chipseq|rz_013_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["7HCP"]="rz_011_01_01_chipseq|rz_012_01_01_chipseq|gv_108_01_01_chipseq|rz_013_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+peaks_category_tag["all_treated"]="rz_010_01_01_chipseq|rz_011_01_01_chipseq|rz_012_01_01_chipseq|gv_108_01_01_chipseq|rz_013_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+# peaks_category_tag["all_treated"]="gv_107_01_01_chipseq|gv_108_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+# peaks_category_tag["4HCP"]="gv_108_01_01_chipseq|gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+# peaks_category_tag["3HCP"]="gv_109_01_01_chipseq|gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+# peaks_category_tag["2HCP"]="gv_110_01_01_chipseq|gv_111_01_01_chipseq|gv_066_01_01_chipseq"
+# peaks_category_tag["1HCP"]="gv_111_01_01_chipseq|gv_066_01_01_chipseq"
 
 #==================================================================================================
 # COMMANDS

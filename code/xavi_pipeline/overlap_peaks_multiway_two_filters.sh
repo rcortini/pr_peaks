@@ -26,7 +26,7 @@ source ~/work/tools/my_env.sh
 
 # variables
 analysis=peak_analysis
-samples="gv_106_01_01_chipseq gv_107_01_01_chipseq gv_108_01_01_chipseq gv_109_01_01_chipseq gv_110_01_01_chipseq gv_111_01_01_chipseq gv_066_01_01_chipseq"
+samples="gv_106_01_01_chipseq gv_107_01_01_chipseq gv_108_01_01_chipseq gv_109_01_01_chipseq gv_110_01_01_chipseq gv_111_01_01_chipseq gv_066_01_01_chipseq rz_010_01_01_chipseq rz_011_01_01_chipseq rz_012_01_01_chipseq rz_013_01_01_chipseq"
 min_qval=5 	# expressed as -log10(x)
 min_enrichment=4
 process=overlap_peaks
@@ -37,7 +37,7 @@ sequencing_type=single_end
 
 # Paths
 PROJECT=$HOME/work/CRG/projects/pr_peaks
-DATA=$PROJECT/data
+DATA=$PROJECT/data/chipseq
 ANALYSIS=$DATA/$analysis
 mkdir -p $ANALYSIS
 
@@ -48,7 +48,9 @@ mkdir -p $ANALYSIS
 
 # filter peaks list by q-value and enrichment
 for s in $samples; do
-  ibed=$DATA/samples/$s/peaks/$peak_caller/$version/$peak_calling_mode/$sequencing_type/${s}_peaks.narrowPeak
+  ibed=$(find $DATA/samples/$s -name "*chipseq_peaks.narrowPeak")
+  echo $ibed
+  # ibed=$DATA/samples/$s/peaks/$peak_caller/$version/$peak_calling_mode/$sequencing_type/${s}_peaks.narrowPeak
   tbed=$ANALYSIS/$s
   log_message "Filtering $s"
   awk -v min_qval=$min_qval -v min_enrichment=$min_enrichment '($7 > min_enrichment) && ($9 > min_qval)' $ibed | grep -v "chrM\|chrY\|chrUn\|luciferase" > $tbed
@@ -60,6 +62,6 @@ otsv_regions=$ANALYSIS/overlap_peaks_minqval${min_qval}_minenrichment${min_enric
 log_message "Merging peaks"
 cd $ANALYSIS
 mergePeaks -d given $samples -venn $otsv_venn > $otsv_regions
-rm -f $samples
+# rm -f $samples
 log_message "Done"
 cd
