@@ -3,3 +3,4 @@ data
 *.swp
 *.pyc
 code/scripts/cluster
+scratch/
