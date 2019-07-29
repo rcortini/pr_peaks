@@ -3,7 +3,7 @@ import pysam
 import numpy as np
 
 def load_hcp_peaks (peaks_id, pr_peaks_root='/home/rcortini/work/CRG/projects/pr_peaks') :
-    datadir = '%s/data/peak_analysis'%(pr_peaks_root)
+    datadir = '%s/data/chipseq/peak_analysis'%(pr_peaks_root)
     datafile = '%s/genomic_coordinates_by_peak_population_%s.bed'%(datadir,peaks_id)
     return parse_simple_bed(datafile)
 
